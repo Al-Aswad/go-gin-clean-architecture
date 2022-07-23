@@ -1,6 +1,7 @@
 package config
 
 import (
+	"go-gin-clean-architecture/app/models"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -14,7 +15,10 @@ func DBConnect() *gorm.DB {
 	if err != nil {
 		panic("failed to connect database")
 	}
-
 	log.Println("Connected to database")
+
+	db.AutoMigrate(&models.User{})
+	log.Println("Migration")
+
 	return db
 }
