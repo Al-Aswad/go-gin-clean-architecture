@@ -1,14 +1,40 @@
 package main
 
-import "go-gin-clean-architecture/app/config"
+import (
+	"go-gin-clean-architecture/app/config"
+	"go-gin-clean-architecture/app/controllers"
+	"go-gin-clean-architecture/app/repositories"
+	"go-gin-clean-architecture/app/services"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
+
+var (
+	db             *gorm.DB                    = config.DBConnect()
+	userRepo       repositories.UserRepository = repositories.CreateUserRepo(db)
+	userService    services.UserService        = services.CreateUserService(userRepo)
+	userController controllers.UserController  = controllers.CreateUserController(userService)
+)
 
 func main() {
-	db, err := config.DBConnect().DB()
+	// defer config.CloseDatabaseConnection(db)
+	r := setupRouter()
 
-	if err != nil {
-		panic("failed to connect database")
+	routes := r.Group("v1")
+	{
+		routes.POST("/users", userController.Create)
 	}
 
-	defer db.Close()
+	r.Run(":5000")
 
+}
+
+func setupRouter() *gin.Engine {
+	r := gin.Default()
+	r.GET("/test", func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
+	})
+	return r
 }
