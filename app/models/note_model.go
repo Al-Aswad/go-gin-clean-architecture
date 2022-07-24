@@ -7,7 +7,7 @@ type Note struct {
 	Title       string `gorm:"not null"`
 	Body        string `gorm:"not null"`
 	Description string `gorm:"not null"`
-	UserID      int
+	UserID      uint64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   *time.Time `sql:"index"`

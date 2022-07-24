@@ -45,7 +45,7 @@ func (c *authController) Login(ctx *gin.Context) {
 		generateToken := c.jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
 		v.Token = generateToken
 		response := helpers.BuildResponse(true, "OK!", nil, v)
-		ctx.SetCookie("token", generateToken, 3600, "/", "localhost", false, true)
+		ctx.SetCookie("token", generateToken, 3600, "/", "localhost:5000", false, true)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}

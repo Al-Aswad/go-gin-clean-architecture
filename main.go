@@ -24,7 +24,7 @@ var (
 
 	authController controllers.AuthController = controllers.CreateAuthController(authSerive, userService, jwtService)
 	userController controllers.UserController = controllers.CreateUserController(userService)
-	noteController controllers.NoteController = controllers.CreateNoteController(noteService)
+	noteController controllers.NoteController = controllers.CreateNoteController(noteService, jwtService)
 )
 
 func main() {
