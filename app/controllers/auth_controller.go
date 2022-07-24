@@ -5,10 +5,13 @@ import (
 	"go-gin-clean-architecture/app/helpers"
 	"go-gin-clean-architecture/app/models"
 	"go-gin-clean-architecture/app/services"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 type AuthController interface {
@@ -31,6 +34,12 @@ func CreateAuthController(authService services.AuthSevice, userService services.
 }
 
 func (c *authController) Login(ctx *gin.Context) {
+	err := godotenv.Load()
+
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
 	var loginDTO dto.LoginDto
 
 	errDTO := ctx.ShouldBind(&loginDTO)
@@ -45,7 +54,9 @@ func (c *authController) Login(ctx *gin.Context) {
 		generateToken := c.jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
 		v.Token = generateToken
 		response := helpers.BuildResponse(true, "OK!", nil, v)
-		ctx.SetCookie("token", generateToken, 3600, "/", "localhost:5000", false, true)
+		baseUrl := os.Getenv("DOMAIN")
+		log.Println("Domain Cookie ", baseUrl)
+		ctx.SetCookie("token", generateToken, 3600, "/", baseUrl, false, true)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}

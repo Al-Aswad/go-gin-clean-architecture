@@ -6,8 +6,10 @@ import (
 	"go-gin-clean-architecture/app/repositories"
 	"go-gin-clean-architecture/app/services"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 )
 
@@ -29,6 +31,12 @@ var (
 
 func main() {
 	// defer config.CloseDatabaseConnection(db)
+	err := godotenv.Load()
+
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
 	r := setupRouter()
 
 	routes := r.Group("v1")
@@ -39,7 +47,7 @@ func main() {
 		routes.POST("/notes", noteController.Create)
 	}
 
-	r.Run(":5000")
+	r.Run(":" + os.Getenv("PORT"))
 
 }
 
