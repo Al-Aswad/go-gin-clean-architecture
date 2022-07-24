@@ -22,7 +22,7 @@ var (
 	noteRepo    repositories.NoteRepository = repositories.CreateNoteRepository(db)
 	noteService services.NoteService        = services.CreateNoteService(noteRepo)
 
-	authController controllers.AuthController = controllers.CreateAuthController(authSerive, jwtService)
+	authController controllers.AuthController = controllers.CreateAuthController(authSerive, userService, jwtService)
 	userController controllers.UserController = controllers.CreateUserController(userService)
 	noteController controllers.NoteController = controllers.CreateNoteController(noteService)
 )
@@ -34,6 +34,7 @@ func main() {
 	routes := r.Group("v1")
 	{
 		routes.POST("/login", authController.Login)
+		routes.POST("/register", authController.Register)
 		routes.POST("/users", userController.Create)
 		routes.POST("/notes", noteController.Create)
 	}
