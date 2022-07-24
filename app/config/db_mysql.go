@@ -17,7 +17,7 @@ func DBConnect() *gorm.DB {
 	}
 	log.Println("Connected to database")
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Note{})
 	log.Println("Migration")
 
 	return db

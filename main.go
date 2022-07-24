@@ -12,10 +12,15 @@ import (
 )
 
 var (
-	db             *gorm.DB                    = config.DBConnect()
-	userRepo       repositories.UserRepository = repositories.CreateUserRepo(db)
-	userService    services.UserService        = services.CreateUserService(userRepo)
-	userController controllers.UserController  = controllers.CreateUserController(userService)
+	db          *gorm.DB                    = config.DBConnect()
+	userRepo    repositories.UserRepository = repositories.CreateUserRepo(db)
+	userService services.UserService        = services.CreateUserService(userRepo)
+
+	noteRepo    repositories.NoteRepository = repositories.CreateNoteRepository(db)
+	noteService services.NoteService        = services.CreateNoteService(noteRepo)
+
+	userController controllers.UserController = controllers.CreateUserController(userService)
+	noteController controllers.NoteController = controllers.CreateNoteController(noteService)
 )
 
 func main() {
@@ -25,6 +30,7 @@ func main() {
 	routes := r.Group("v1")
 	{
 		routes.POST("/users", userController.Create)
+		routes.POST("/notes", noteController.Create)
 	}
 
 	r.Run(":5000")
