@@ -1,8 +1,12 @@
 package services
 
 import (
+	"go-gin-clean-architecture/app/dto"
 	"go-gin-clean-architecture/app/models"
 	"go-gin-clean-architecture/app/repositories"
+	"log"
+
+	"github.com/mashingan/smapping"
 )
 
 type UserServiceImpl struct {
@@ -16,6 +20,21 @@ func CreateUserService(userRepo repositories.UserRepository) UserService {
 
 }
 
-func (u *UserServiceImpl) Create(user *models.User) (*models.User, error) {
-	return u.userRepo.Create(user)
+func (u *UserServiceImpl) Create(user dto.RegisterUserDto) (models.User, error) {
+	userCreate := models.User{}
+	err := smapping.FillStruct(&userCreate, smapping.MapFields(&user))
+
+	if err != nil {
+		log.Println("[UserServiceImpl.Create] error fill struct", err)
+		return userCreate, err
+	}
+
+	log.Println("[UserServiceImpl.Create] userCreate", userCreate)
+
+	userCreate, err = u.userRepo.Create(userCreate)
+	if err != nil {
+		log.Println("[UserServiceImpl.Create] error execute query", err)
+		return models.User{}, err
+	}
+	return userCreate, nil
 }

@@ -1,7 +1,9 @@
 package repositories
 
-import "go-gin-clean-architecture/app/models"
+import (
+	"go-gin-clean-architecture/app/models"
+)
 
 type UserRepository interface {
-	Create(user *models.User) (*models.User, error)
+	Create(user models.User) (models.User, error)
 }

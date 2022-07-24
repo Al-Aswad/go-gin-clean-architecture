@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"go-gin-clean-architecture/app/dto"
+	"go-gin-clean-architecture/app/helpers"
 	"go-gin-clean-architecture/app/services"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +24,25 @@ func CreateUserController(userService services.UserService) UserController {
 }
 
 func (u *userController) Create(ctx *gin.Context) {
-	ctx.JSON(200, gin.H{
-		"message": "User created successfully",
-	})
+	var dtoUserCreate dto.RegisterUserDto
+
+	errDto := ctx.ShouldBind(&dtoUserCreate)
+	if errDto != nil {
+		res := helpers.BuildErrorResponse("failed to bind request", errDto.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	createUser, err := u.userService.Create(dtoUserCreate)
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to create user", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := helpers.BuildResponse(true, "success", nil, createUser)
+	ctx.JSON(http.StatusCreated, res)
+
 }
