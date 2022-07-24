@@ -30,6 +30,17 @@ func (u *UserRepositoryImpl) Create(user models.User) (models.User, error) {
 	return user, nil
 }
 
+func (u *UserRepositoryImpl) VerifyUser(email string, password string) interface{} {
+	var user models.User
+	res := u.db.Where("email= ?", email).Take(&user)
+
+	if res.Error != nil {
+		return nil
+	}
+
+	return user
+}
+
 func hashAndSalt(pwd []byte) string {
 	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
 	if err != nil {
