@@ -41,15 +41,6 @@ func (n *noteController) Create(ctx *gin.Context) {
 		return
 	}
 
-	// userId, err := helpers.GetUserIdFromContext(ctx)
-	createNote, err := n.noteService.Create(noteAddDto)
-	if err != nil {
-		res := helpers.BuildErrorResponse("failed to create note", err.Error(), nil)
-
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-
 	cookieToken, err := ctx.Cookie("token")
 	if err != nil {
 		res := helpers.BuildErrorResponse("Token Not Found", err.Error(), nil)
@@ -67,7 +58,16 @@ func (n *noteController) Create(ctx *gin.Context) {
 		return
 	}
 
-	createNote.UserID = convertUserID
+	noteAddDto.UserID = convertUserID
+
+	createNote, err := n.noteService.Create(noteAddDto)
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to create note", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
 	res := helpers.BuildResponse(true, "success", nil, createNote)
 	ctx.JSON(http.StatusCreated, res)
 
