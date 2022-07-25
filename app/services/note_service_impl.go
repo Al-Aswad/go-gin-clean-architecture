@@ -43,6 +43,10 @@ func (usImpl *NoteServiceImpl) Create(note dto.NoteAddDto) (models.Note, error) 
 func (n *NoteServiceImpl) UpdateNoteByID(id int, note dto.NoteUpdateByIDDTO) (models.Note, error) {
 	noteUpdate := models.Note{}
 	err := smapping.FillStruct(&noteUpdate, smapping.MapFields(&note))
+	if err != nil {
+		log.Println("[NoteServiceImpl.Create] error fill struct", err)
+		return noteUpdate, err
+	}
 
 	noteUpdate, err = n.noteRepo.UpdateNoteByID(id, noteUpdate)
 
@@ -66,8 +70,8 @@ func (n *NoteServiceImpl) DeteleNoteByID(id int) bool {
 	return n.noteRepo.DeteleNoteByID(id)
 }
 
-func (n *NoteServiceImpl) All() ([]models.Note, error) {
-	notes, err := n.noteRepo.All()
+func (n *NoteServiceImpl) All(userID int) ([]models.Note, error) {
+	notes, err := n.noteRepo.All(userID)
 	if err != nil {
 		return nil, err
 	}

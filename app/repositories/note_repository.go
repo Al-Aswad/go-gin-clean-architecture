@@ -9,5 +9,5 @@ type NoteRepository interface {
 	UpdateNoteByID(id int, note models.Note) (models.Note, error)
 	DeteleNoteByID(id int) bool
 	FindNoteByID(id int) (models.Note, error)
-	All() ([]models.Note, error)
+	All(userID int) ([]models.Note, error)
 }

@@ -50,9 +50,11 @@ func (n *NoteRepositoryImpl) DeteleNoteByID(id int) bool {
 	return n.db.Delete(&models.Note{}, "id = ?", id).RowsAffected > 0
 }
 
-func (n *NoteRepositoryImpl) All() ([]models.Note, error) {
+func (n *NoteRepositoryImpl) All(userID int) ([]models.Note, error) {
 	var notes []models.Note
-	err := n.db.Find(&notes).Error
+	// err := n.db.Find(&notes).Error
+	// err := n.db.Find(&notes).Where("user_id = ?", userID).Error
+	err := n.db.Where("user_id = ?", userID).Find(&notes).Error
 	if err != nil {
 		return nil, err
 	}

@@ -10,5 +10,5 @@ type NoteService interface {
 	UpdateNoteByID(id int, note dto.NoteUpdateByIDDTO) (models.Note, error)
 	DeteleNoteByID(id int) bool
 	FindNoteByID(id int) (models.Note, error)
-	All() ([]models.Note, error)
+	All(userID int) ([]models.Note, error)
 }

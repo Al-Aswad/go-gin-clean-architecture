@@ -109,9 +109,9 @@ func (n *noteController) UpdateNoteByID(ctx *gin.Context) {
 }
 
 func (c *noteController) FindNoteByID(ctx *gin.Context) {
-	idStr := ctx.Param("id")
 
-	id, err := strconv.Atoi(idStr)
+	id, err := getParamID(ctx)
+
 	if err != nil {
 		helpers.BuildErrorResponse("failed to convert id", err.Error(), nil)
 		return
@@ -154,7 +154,24 @@ func (c *noteController) DeteleNoteByID(ctx *gin.Context) {
 }
 
 func (c *noteController) All(ctx *gin.Context) {
-	notes, err := c.noteService.All()
+	cookieToken, err := ctx.Cookie("token")
+	if err != nil {
+		res := helpers.BuildErrorResponse("Token Not Found", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	userID := c.getUserIDbyToken(cookieToken)
+	convertUserID, err := strconv.Atoi(userID)
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to convert user id", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	notes, err := c.noteService.All(convertUserID)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to find note", err.Error(), nil)
 
@@ -176,4 +193,14 @@ func (c *noteController) getUserIDbyToken(token string) string {
 	claims := aToken.Claims.(jwt.MapClaims)
 	return fmt.Sprintf("%v", claims["user_id"])
 
+}
+
+func getParamID(ctx *gin.Context) (int, error) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return -1, err
+	}
+
+	return id, nil
 }
