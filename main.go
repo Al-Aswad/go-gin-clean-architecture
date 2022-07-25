@@ -3,6 +3,7 @@ package main
 import (
 	"go-gin-clean-architecture/app/config"
 	"go-gin-clean-architecture/app/controllers"
+	"go-gin-clean-architecture/app/middleware"
 	"go-gin-clean-architecture/app/repositories"
 	"go-gin-clean-architecture/app/services"
 	"net/http"
@@ -39,10 +40,15 @@ func main() {
 
 	r := setupRouter()
 
-	routes := r.Group("v1")
+	routesAuth := r.Group("v1")
 	{
-		routes.POST("/login", authController.Login)
-		routes.POST("/register", authController.Register)
+		routesAuth.POST("/login", authController.Login)
+		routesAuth.POST("/register", authController.Register)
+	}
+
+	routes := r.Group("v1")
+	routes.Use(middleware.IsUser(jwtService))
+	{
 		routes.POST("/users", userController.Create)
 		routes.POST("/notes", noteController.Create)
 		routes.GET("/notes", noteController.All)
