@@ -36,3 +36,25 @@ func (n *NoteRepositoryImpl) UpdateNoteByID(id int, note models.Note) (models.No
 
 	return noteUpdate, nil
 }
+
+func (n *NoteRepositoryImpl) FindNoteByID(id int) (models.Note, error) {
+	note := models.Note{}
+	err := n.db.Where("id = ?", id).First(&note).Error
+	if err != nil {
+		return models.Note{}, err
+	}
+	return note, nil
+}
+
+func (n *NoteRepositoryImpl) DeteleNoteByID(id int) bool {
+	return n.db.Delete(&models.Note{}, "id = ?", id).RowsAffected > 0
+}
+
+func (n *NoteRepositoryImpl) All() ([]models.Note, error) {
+	var notes []models.Note
+	err := n.db.Find(&notes).Error
+	if err != nil {
+		return nil, err
+	}
+	return notes, nil
+}

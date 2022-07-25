@@ -16,6 +16,9 @@ import (
 type NoteController interface {
 	Create(ctx *gin.Context)
 	UpdateNoteByID(ctx *gin.Context)
+	DeteleNoteByID(ctx *gin.Context)
+	FindNoteByID(ctx *gin.Context)
+	All(ctx *gin.Context)
 }
 
 type noteController struct {
@@ -101,6 +104,65 @@ func (n *noteController) UpdateNoteByID(ctx *gin.Context) {
 	}
 
 	res := helpers.BuildResponse(true, "success", nil, updateNote)
+	ctx.JSON(http.StatusOK, res)
+
+}
+
+func (c *noteController) FindNoteByID(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		helpers.BuildErrorResponse("failed to convert id", err.Error(), nil)
+		return
+	}
+
+	note, err := c.noteService.FindNoteByID(id)
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to find note", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := helpers.BuildResponse(true, "success", nil, note)
+	ctx.JSON(http.StatusOK, res)
+
+}
+
+func (c *noteController) DeteleNoteByID(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		helpers.BuildErrorResponse("failed to convert id", err.Error(), nil)
+		return
+	}
+
+	_, errFind := c.noteService.FindNoteByID(id)
+	if errFind != nil {
+		res := helpers.BuildErrorResponse("failed to find note", errFind.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	deleteNote := c.noteService.DeteleNoteByID(id)
+
+	res := helpers.BuildResponse(true, "success", nil, deleteNote)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (c *noteController) All(ctx *gin.Context) {
+	notes, err := c.noteService.All()
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to find note", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := helpers.BuildResponse(true, "success", nil, notes)
 	ctx.JSON(http.StatusOK, res)
 
 }

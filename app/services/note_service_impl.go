@@ -53,3 +53,23 @@ func (n *NoteServiceImpl) UpdateNoteByID(id int, note dto.NoteUpdateByIDDTO) (mo
 	}
 	return noteUpdate, nil
 }
+
+func (n *NoteServiceImpl) FindNoteByID(id int) (models.Note, error) {
+	note, err := n.noteRepo.FindNoteByID(id)
+	if err != nil {
+		return models.Note{}, err
+	}
+	return note, nil
+}
+
+func (n *NoteServiceImpl) DeteleNoteByID(id int) bool {
+	return n.noteRepo.DeteleNoteByID(id)
+}
+
+func (n *NoteServiceImpl) All() ([]models.Note, error) {
+	notes, err := n.noteRepo.All()
+	if err != nil {
+		return nil, err
+	}
+	return notes, nil
+}
