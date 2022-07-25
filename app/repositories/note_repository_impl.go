@@ -24,3 +24,15 @@ func (n *NoteRepositoryImpl) Create(note models.Note) (models.Note, error) {
 	}
 	return note, nil
 }
+
+func (n *NoteRepositoryImpl) UpdateNoteByID(id int, note models.Note) (models.Note, error) {
+	noteUpdate := models.Note{}
+
+	// Update attributes with `struct`, will only update non-zero fields
+	err := n.db.Model(&noteUpdate).Where("id = ?", id).Updates(&note).Error
+	if err != nil {
+		return models.Note{}, err
+	}
+
+	return noteUpdate, nil
+}

@@ -45,6 +45,7 @@ func main() {
 		routes.POST("/register", authController.Register)
 		routes.POST("/users", userController.Create)
 		routes.POST("/notes", noteController.Create)
+		routes.PUT("/notes/:id", noteController.UpdateNoteByID)
 	}
 
 	r.Run(":" + os.Getenv("PORT"))

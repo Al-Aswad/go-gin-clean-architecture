@@ -39,3 +39,17 @@ func (usImpl *NoteServiceImpl) Create(note dto.NoteAddDto) (models.Note, error) 
 	}
 	return noteCreate, nil
 }
+
+func (n *NoteServiceImpl) UpdateNoteByID(id int, note dto.NoteUpdateByIDDTO) (models.Note, error) {
+	noteUpdate := models.Note{}
+	err := smapping.FillStruct(&noteUpdate, smapping.MapFields(&note))
+
+	noteUpdate, err = n.noteRepo.UpdateNoteByID(id, noteUpdate)
+
+	log.Println("[NoteServiceImpl.UpdateNoteByID] Body", noteUpdate)
+
+	if err != nil {
+		return models.Note{}, err
+	}
+	return noteUpdate, nil
+}
