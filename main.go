@@ -63,6 +63,7 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 	r.GET("/test", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})

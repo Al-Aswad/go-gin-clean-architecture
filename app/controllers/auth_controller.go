@@ -5,9 +5,7 @@ import (
 	"go-gin-clean-architecture/app/helpers"
 	"go-gin-clean-architecture/app/models"
 	"go-gin-clean-architecture/app/services"
-	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -34,6 +32,7 @@ func CreateAuthController(authService services.AuthSevice, userService services.
 }
 
 func (c *authController) Login(ctx *gin.Context) {
+	ctx.SetCookie("test", "test", 1, "/", "localhost", false, true)
 	err := godotenv.Load()
 
 	if err != nil {
@@ -54,9 +53,7 @@ func (c *authController) Login(ctx *gin.Context) {
 		generateToken := c.jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
 		v.Token = generateToken
 		response := helpers.BuildResponse(true, "OK!", nil, v)
-		baseUrl := os.Getenv("DOMAIN")
-		log.Println("Domain Cookie ", baseUrl)
-		ctx.SetCookie("token", generateToken, 3600, "/", baseUrl, false, true)
+		ctx.SetCookie("token", generateToken, 3600, "/", "", false, true)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}
