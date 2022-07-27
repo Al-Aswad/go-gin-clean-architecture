@@ -7,8 +7,8 @@ import (
 func CORSMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		// ctx.Writer.Header().Set("Access-Control-Allow-Origin", "https://note-app-jet.vercel.app") //harus di set manual
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "https://note-app-jet.vercel.app") //harus di set manual
+		// ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		// ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")           //harus di set manual
 		// ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3001")           //harus di set manual
 		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
