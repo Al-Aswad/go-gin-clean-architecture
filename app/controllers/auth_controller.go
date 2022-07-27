@@ -9,7 +9,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 type AuthController interface {
@@ -33,11 +32,6 @@ func CreateAuthController(authService services.AuthSevice, userService services.
 
 func (c *authController) Login(ctx *gin.Context) {
 	ctx.SetCookie("test", "test", 1, "/", "localhost", false, true)
-	err := godotenv.Load()
-
-	if err != nil {
-		panic("Error loading .env file")
-	}
 
 	var loginDTO dto.LoginDto
 
