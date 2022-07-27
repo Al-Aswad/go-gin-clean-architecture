@@ -18,7 +18,7 @@ func DBConnect() *gorm.DB {
 	}
 
 	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_Name")
+	dbName := os.Getenv("DB_NAME")
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
 

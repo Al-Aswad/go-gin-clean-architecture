@@ -56,8 +56,11 @@ func main() {
 		routes.PUT("/notes/:id", noteController.UpdateNoteByID)
 		routes.DELETE("/notes/:id", noteController.DeteleNoteByID)
 	}
-
-	r.Run(":" + os.Getenv("PORT"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000" // Default port if not specified
+	}
+	r.Run(":" + port)
 
 }
 
