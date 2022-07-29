@@ -1,4 +1,4 @@
-module go-gin-clean-architecture
+module go-gin-note-app
 
 go 1.17
 

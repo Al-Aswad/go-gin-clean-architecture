@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"go-gin-clean-architecture/app/dto"
-	"go-gin-clean-architecture/app/helpers"
-	"go-gin-clean-architecture/app/services"
+	"go-gin-note-app/app/dto"
+	"go-gin-note-app/app/helpers"
+	"go-gin-note-app/app/services"
 	"log"
 	"net/http"
 	"strconv"

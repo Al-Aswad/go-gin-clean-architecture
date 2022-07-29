@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"go-gin-clean-architecture/app/models"
+	"go-gin-note-app/app/models"
 	"log"
 	"os"
 

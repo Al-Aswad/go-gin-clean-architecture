@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"fmt"
-	"go-gin-clean-architecture/app/models"
+	"go-gin-note-app/app/models"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"

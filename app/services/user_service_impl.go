@@ -1,9 +1,9 @@
 package services
 
 import (
-	"go-gin-clean-architecture/app/dto"
-	"go-gin-clean-architecture/app/models"
-	"go-gin-clean-architecture/app/repositories"
+	"go-gin-note-app/app/dto"
+	"go-gin-note-app/app/models"
+	"go-gin-note-app/app/repositories"
 	"log"
 
 	"github.com/mashingan/smapping"

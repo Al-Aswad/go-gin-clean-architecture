@@ -1,11 +1,11 @@
 package main
 
 import (
-	"go-gin-clean-architecture/app/config"
-	"go-gin-clean-architecture/app/controllers"
-	"go-gin-clean-architecture/app/middleware"
-	"go-gin-clean-architecture/app/repositories"
-	"go-gin-clean-architecture/app/services"
+	"go-gin-note-app/app/config"
+	"go-gin-note-app/app/controllers"
+	"go-gin-note-app/app/middleware"
+	"go-gin-note-app/app/repositories"
+	"go-gin-note-app/app/services"
 	"net/http"
 	"os"
 

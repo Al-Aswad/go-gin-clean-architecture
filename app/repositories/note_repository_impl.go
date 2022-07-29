@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"go-gin-clean-architecture/app/models"
+	"go-gin-note-app/app/models"
 
 	"gorm.io/gorm"
 )

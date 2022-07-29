@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"go-gin-clean-architecture/app/dto"
-	"go-gin-clean-architecture/app/helpers"
-	"go-gin-clean-architecture/app/models"
-	"go-gin-clean-architecture/app/services"
+	"go-gin-note-app/app/dto"
+	"go-gin-note-app/app/helpers"
+	"go-gin-note-app/app/models"
+	"go-gin-note-app/app/services"
 	"net/http"
 	"strconv"
 
@@ -31,7 +31,6 @@ func CreateAuthController(authService services.AuthSevice, userService services.
 }
 
 func (c *authController) Login(ctx *gin.Context) {
-	ctx.SetCookie("test", "test", 1, "/", "localhost", false, true)
 
 	var loginDTO dto.LoginDto
 
@@ -47,7 +46,7 @@ func (c *authController) Login(ctx *gin.Context) {
 		generateToken := c.jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
 		v.Token = generateToken
 		response := helpers.BuildResponse(true, "OK!", nil, v)
-		ctx.SetCookie("token", generateToken, 3600, "/", "", false, true)
+		ctx.SetCookie("token", generateToken, 3600, "/", "localhost", true, true)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}

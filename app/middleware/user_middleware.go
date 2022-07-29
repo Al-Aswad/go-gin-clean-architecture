@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"go-gin-clean-architecture/app/helpers"
-	"go-gin-clean-architecture/app/services"
+	"go-gin-note-app/app/helpers"
+	"go-gin-note-app/app/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
