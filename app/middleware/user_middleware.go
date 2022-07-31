@@ -14,8 +14,7 @@ import (
 func IsUser(jwtService services.JWTservice) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		cookieToken := ctx.Request.Header["Authorization"]
-		fmt.Println("cookie ===========", cookieToken)
-		fmt.Println("cookie ===========", cookieToken[0])
+		fmt.Println("cookie1 ===========", cookieToken)
 		if cookieToken == nil {
 			res := helpers.BuildErrorResponse("Token Not Found1", "Token Kosong !", nil)
 
