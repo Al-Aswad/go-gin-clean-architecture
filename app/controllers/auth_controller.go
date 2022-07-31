@@ -43,10 +43,10 @@ func (c *authController) Login(ctx *gin.Context) {
 
 	authResult := c.authSerive.VerifyCredential(loginDTO.Email, loginDTO.Password)
 	if v, ok := authResult.(models.User); ok {
-		generateToken := c.jwtService.GenerateToken(strconv.FormatUint(v.ID, 10))
+		generateToken := c.jwtService.GenerateToken(strconv.FormatUint(v.ID, 10), v.Email, v.Username)
 		v.Token = generateToken
 		response := helpers.BuildResponse(true, "OK!", nil, v)
-		ctx.SetCookie("token", generateToken, 3600, "/", "localhost", true, true)
+		// ctx.SetCookie("token", generateToken, 3600, "/", "localhost", true, true)
 		ctx.JSON(http.StatusOK, response)
 		return
 	}

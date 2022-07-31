@@ -13,19 +13,19 @@ type JWTServiceImpl struct {
 }
 
 type jwtCustomClaim struct {
-	UserId string `json:"user_id"`
+	UserId string `json:"id"`
 	jwt.StandardClaims
 }
 
 type jwtService struct {
 	secretKey string
 	issuer    string
+	subject   string
 }
 
 func CreateJwtService() JWTservice {
 	return &jwtService{
 		secretKey: getSecretKey(),
-		issuer:    "aswad",
 	}
 }
 
@@ -39,13 +39,14 @@ func getSecretKey() string {
 	return secretKey
 }
 
-func (j *jwtService) GenerateToken(userID string) string {
+func (j *jwtService) GenerateToken(userID string, email string, userName string) string {
 	claims := jwtCustomClaim{
 		userID,
 		jwt.StandardClaims{
 			// ExpiresAt: time.Now().AddDate(1, 0, 0).Unix(),
+			Subject:   userName,
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-			Issuer:    j.issuer,
+			Issuer:    email,
 			IssuedAt:  time.Now().Unix(),
 		},
 	}

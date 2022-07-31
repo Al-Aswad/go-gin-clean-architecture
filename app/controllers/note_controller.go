@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -45,15 +46,10 @@ func (n *noteController) Create(ctx *gin.Context) {
 		return
 	}
 
-	cookieToken, err := ctx.Cookie("token")
-	if err != nil {
-		res := helpers.BuildErrorResponse("Token Not Found", err.Error(), nil)
+	cookieToken := ctx.Request.Header["Authorization"][0]
+	tokenString := strings.Replace(cookieToken, "Bearer ", "", -1)
 
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-
-	userID := n.getUserIDbyToken(cookieToken)
+	userID := n.getUserIDbyToken(tokenString)
 	convertUserID, err := strconv.ParseUint(userID, 10, 64)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to convert user id", err.Error(), nil)
@@ -154,15 +150,11 @@ func (c *noteController) DeteleNoteByID(ctx *gin.Context) {
 }
 
 func (c *noteController) All(ctx *gin.Context) {
-	cookieToken, err := ctx.Cookie("token")
-	if err != nil {
-		res := helpers.BuildErrorResponse("Token Not Found", err.Error(), nil)
 
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
+	cookieToken := ctx.Request.Header["Authorization"][0]
+	tokenString := strings.Replace(cookieToken, "Bearer ", "", -1)
 
-	userID := c.getUserIDbyToken(cookieToken)
+	userID := c.getUserIDbyToken(tokenString)
 	convertUserID, err := strconv.Atoi(userID)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to convert user id", err.Error(), nil)
@@ -191,7 +183,7 @@ func (c *noteController) getUserIDbyToken(token string) string {
 	}
 
 	claims := aToken.Claims.(jwt.MapClaims)
-	return fmt.Sprintf("%v", claims["user_id"])
+	return fmt.Sprintf("%v", claims["id"])
 
 }
 
