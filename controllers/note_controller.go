@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"go-gin-note-app/app/dto"
-	"go-gin-note-app/app/helpers"
-	"go-gin-note-app/app/services"
+	"gin-note-app/dto"
+	"gin-note-app/helpers"
+	"gin-note-app/services"
 	"log"
 	"net/http"
 	"strconv"

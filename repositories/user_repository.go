@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"go-gin-note-app/app/models"
+	"gin-note-app/models"
 )
 
 type UserRepository interface {

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"go-gin-note-app/app/models"
-	"go-gin-note-app/app/repositories"
+	"gin-note-app/models"
+	"gin-note-app/repositories"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"

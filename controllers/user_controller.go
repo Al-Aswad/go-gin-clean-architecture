@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"go-gin-note-app/app/dto"
-	"go-gin-note-app/app/helpers"
-	"go-gin-note-app/app/services"
+	"gin-note-app/dto"
+	"gin-note-app/helpers"
+	"gin-note-app/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

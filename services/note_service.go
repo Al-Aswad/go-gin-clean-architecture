@@ -1,8 +1,8 @@
 package services
 
 import (
-	"go-gin-note-app/app/dto"
-	"go-gin-note-app/app/models"
+	"gin-note-app/dto"
+	"gin-note-app/models"
 )
 
 type NoteService interface {

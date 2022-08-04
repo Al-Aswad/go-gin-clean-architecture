@@ -1,11 +1,11 @@
 package main
 
 import (
-	"go-gin-note-app/app/config"
-	"go-gin-note-app/app/controllers"
-	"go-gin-note-app/app/middleware"
-	"go-gin-note-app/app/repositories"
-	"go-gin-note-app/app/services"
+	"gin-note-app/config"
+	"gin-note-app/controllers"
+	"gin-note-app/middleware"
+	"gin-note-app/repositories"
+	"gin-note-app/services"
 	"net/http"
 	"os"
 

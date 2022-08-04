@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"go-gin-note-app/app/models"
+	"gin-note-app/models"
 	"log"
 	"os"
 
