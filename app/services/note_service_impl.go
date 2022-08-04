@@ -58,6 +58,24 @@ func (n *NoteServiceImpl) UpdateNoteByID(id int, note dto.NoteUpdateByIDDTO) (mo
 	return noteUpdate, nil
 }
 
+func (n *NoteServiceImpl) UpdateArchive(id int, note dto.NoteArhiveDTO) (models.Note, error) {
+	noteUpdate := models.Note{}
+	err := smapping.FillStruct(&noteUpdate, smapping.MapFields(&note))
+	if err != nil {
+		log.Println("[NoteServiceImpl.Create] error fill struct", err)
+		return noteUpdate, err
+	}
+
+	noteUpdate, err = n.noteRepo.ArchiveNote(id, note)
+
+	log.Println("[NoteServiceImpl.UpdateArchive] Body", noteUpdate)
+
+	if err != nil {
+		return models.Note{}, err
+	}
+	return noteUpdate, nil
+}
+
 func (n *NoteServiceImpl) FindNoteByID(id int) (models.Note, error) {
 	note, err := n.noteRepo.FindNoteByID(id)
 	if err != nil {

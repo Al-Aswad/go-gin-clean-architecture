@@ -54,6 +54,7 @@ func main() {
 		routes.GET("/notes", noteController.All)
 		routes.GET("/notes/:id", noteController.FindNoteByID)
 		routes.PUT("/notes/:id", noteController.UpdateNoteByID)
+		routes.PUT("/notes/archive/:id", noteController.UpdateArchive)
 		routes.DELETE("/notes/:id", noteController.DeteleNoteByID)
 	}
 	port := os.Getenv("PORT")

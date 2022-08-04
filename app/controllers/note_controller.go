@@ -17,6 +17,7 @@ import (
 type NoteController interface {
 	Create(ctx *gin.Context)
 	UpdateNoteByID(ctx *gin.Context)
+	UpdateArchive(ctx *gin.Context)
 	DeteleNoteByID(ctx *gin.Context)
 	FindNoteByID(ctx *gin.Context)
 	All(ctx *gin.Context)
@@ -92,6 +93,37 @@ func (n *noteController) UpdateNoteByID(ctx *gin.Context) {
 	}
 
 	updateNote, err := n.noteService.UpdateNoteByID(id, noteGetByIDDto)
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to update note", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := helpers.BuildResponse(true, "success", nil, updateNote)
+	ctx.JSON(http.StatusOK, res)
+
+}
+
+func (n *noteController) UpdateArchive(ctx *gin.Context) {
+	noteGetByIDDto := dto.NoteArhiveDTO{}
+
+	errDto := ctx.ShouldBind(&noteGetByIDDto)
+	if errDto != nil {
+		res := helpers.BuildErrorResponse("failed to bind request", errDto.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		helpers.BuildErrorResponse("failed to convert id", err.Error(), nil)
+		return
+	}
+
+	updateNote, err := n.noteService.UpdateArchive(id, noteGetByIDDto)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to update note", err.Error(), nil)
 

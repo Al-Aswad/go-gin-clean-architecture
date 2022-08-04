@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"go-gin-note-app/app/dto"
 	"go-gin-note-app/app/models"
 
 	"gorm.io/gorm"
@@ -30,6 +31,22 @@ func (n *NoteRepositoryImpl) UpdateNoteByID(id int, note models.Note) (models.No
 
 	// Update attributes with `struct`, will only update non-zero fields
 	err := n.db.Model(&noteUpdate).Where("id = ?", id).Updates(&note).Error
+	if err != nil {
+		return models.Note{}, err
+	}
+
+	return noteUpdate, nil
+}
+func (n *NoteRepositoryImpl) ArchiveNote(id int, note dto.NoteArhiveDTO) (models.Note, error) {
+	noteUpdate := models.Note{}
+
+	// db.Model(&User{}).Where("active = ?", true).Update("name", "hello")
+	errFind := n.db.First(&noteUpdate, "id = ?", id).Error
+	if errFind != nil {
+		return models.Note{}, errFind
+	}
+	// Update attributes with `struct`, will only update non-zero fields
+	err := n.db.Debug().Model(&noteUpdate).Where("id = ?", id).Update("is_archive", note.IsArchive).Error
 	if err != nil {
 		return models.Note{}, err
 	}
