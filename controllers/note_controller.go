@@ -2,12 +2,13 @@ package controllers
 
 import (
 	"fmt"
-	"go-gin-note-app/app/dto"
-	"go-gin-note-app/app/helpers"
-	"go-gin-note-app/app/services"
+	"gin-note-app/dto"
+	"gin-note-app/helpers"
+	"gin-note-app/services"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -16,6 +17,7 @@ import (
 type NoteController interface {
 	Create(ctx *gin.Context)
 	UpdateNoteByID(ctx *gin.Context)
+	UpdateArchive(ctx *gin.Context)
 	DeteleNoteByID(ctx *gin.Context)
 	FindNoteByID(ctx *gin.Context)
 	All(ctx *gin.Context)
@@ -45,15 +47,10 @@ func (n *noteController) Create(ctx *gin.Context) {
 		return
 	}
 
-	cookieToken, err := ctx.Cookie("token")
-	if err != nil {
-		res := helpers.BuildErrorResponse("Token Not Found", err.Error(), nil)
+	cookieToken := ctx.Request.Header["Authorization"][0]
+	tokenString := strings.Replace(cookieToken, "Bearer ", "", -1)
 
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-
-	userID := n.getUserIDbyToken(cookieToken)
+	userID := n.getUserIDbyToken(tokenString)
 	convertUserID, err := strconv.ParseUint(userID, 10, 64)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to convert user id", err.Error(), nil)
@@ -96,6 +93,37 @@ func (n *noteController) UpdateNoteByID(ctx *gin.Context) {
 	}
 
 	updateNote, err := n.noteService.UpdateNoteByID(id, noteGetByIDDto)
+	if err != nil {
+		res := helpers.BuildErrorResponse("failed to update note", err.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := helpers.BuildResponse(true, "success", nil, updateNote)
+	ctx.JSON(http.StatusOK, res)
+
+}
+
+func (n *noteController) UpdateArchive(ctx *gin.Context) {
+	noteGetByIDDto := dto.NoteArhiveDTO{}
+
+	errDto := ctx.ShouldBind(&noteGetByIDDto)
+	if errDto != nil {
+		res := helpers.BuildErrorResponse("failed to bind request", errDto.Error(), nil)
+
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		helpers.BuildErrorResponse("failed to convert id", err.Error(), nil)
+		return
+	}
+
+	updateNote, err := n.noteService.UpdateArchive(id, noteGetByIDDto)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to update note", err.Error(), nil)
 
@@ -154,15 +182,11 @@ func (c *noteController) DeteleNoteByID(ctx *gin.Context) {
 }
 
 func (c *noteController) All(ctx *gin.Context) {
-	cookieToken, err := ctx.Cookie("token")
-	if err != nil {
-		res := helpers.BuildErrorResponse("Token Not Found", err.Error(), nil)
 
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
+	cookieToken := ctx.Request.Header["Authorization"][0]
+	tokenString := strings.Replace(cookieToken, "Bearer ", "", -1)
 
-	userID := c.getUserIDbyToken(cookieToken)
+	userID := c.getUserIDbyToken(tokenString)
 	convertUserID, err := strconv.Atoi(userID)
 	if err != nil {
 		res := helpers.BuildErrorResponse("failed to convert user id", err.Error(), nil)
@@ -191,7 +215,7 @@ func (c *noteController) getUserIDbyToken(token string) string {
 	}
 
 	claims := aToken.Claims.(jwt.MapClaims)
-	return fmt.Sprintf("%v", claims["user_id"])
+	return fmt.Sprintf("%v", claims["id"])
 
 }
 

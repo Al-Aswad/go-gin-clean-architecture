@@ -6,3 +6,7 @@ type NoteUpdateByIDDTO struct {
 	Description string `json:"desc"`
 	IsArchive   bool   `json:"is_archive"`
 }
+
+type NoteArhiveDTO struct {
+	IsArchive bool `json:"is_archive"`
+}

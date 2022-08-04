@@ -1,9 +1,11 @@
 package middleware
 
 import (
-	"go-gin-note-app/app/helpers"
-	"go-gin-note-app/app/services"
+	"fmt"
+	"gin-note-app/helpers"
+	"gin-note-app/services"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -11,16 +13,17 @@ import (
 
 func IsUser(jwtService services.JWTservice) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		//TODO
-		cookieToken, err := ctx.Cookie("token")
-		if err != nil {
-			res := helpers.BuildErrorResponse("Token Not Found1", err.Error(), nil)
+		cookieToken := ctx.Request.Header["Authorization"]
+		fmt.Println("cookie1 ===========", cookieToken)
+		if cookieToken == nil {
+			res := helpers.BuildErrorResponse("Token Not Found1", "Token Kosong !", nil)
 
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, res)
 			return
 		}
 
-		token, err := jwtService.ValidateToken(cookieToken)
+		tokenString := strings.Replace(cookieToken[0], "Bearer ", "", -1)
+		token, err := jwtService.ValidateToken(tokenString)
 
 		if token.Valid {
 			ctx.Next()

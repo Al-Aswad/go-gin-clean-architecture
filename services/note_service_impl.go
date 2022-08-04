@@ -1,9 +1,9 @@
 package services
 
 import (
-	"go-gin-note-app/app/dto"
-	"go-gin-note-app/app/models"
-	"go-gin-note-app/app/repositories"
+	"gin-note-app/dto"
+	"gin-note-app/models"
+	"gin-note-app/repositories"
 	"log"
 
 	"github.com/mashingan/smapping"
@@ -51,6 +51,24 @@ func (n *NoteServiceImpl) UpdateNoteByID(id int, note dto.NoteUpdateByIDDTO) (mo
 	noteUpdate, err = n.noteRepo.UpdateNoteByID(id, noteUpdate)
 
 	log.Println("[NoteServiceImpl.UpdateNoteByID] Body", noteUpdate)
+
+	if err != nil {
+		return models.Note{}, err
+	}
+	return noteUpdate, nil
+}
+
+func (n *NoteServiceImpl) UpdateArchive(id int, note dto.NoteArhiveDTO) (models.Note, error) {
+	noteUpdate := models.Note{}
+	err := smapping.FillStruct(&noteUpdate, smapping.MapFields(&note))
+	if err != nil {
+		log.Println("[NoteServiceImpl.Create] error fill struct", err)
+		return noteUpdate, err
+	}
+
+	noteUpdate, err = n.noteRepo.ArchiveNote(id, note)
+
+	log.Println("[NoteServiceImpl.UpdateArchive] Body", noteUpdate)
 
 	if err != nil {
 		return models.Note{}, err
